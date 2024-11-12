@@ -3,7 +3,7 @@ Resources:
   WebsiteBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: my-static-website-${AWS::AccountId}
+      BucketName: my-static-website-${AWS::AccountId}-${AWS::Region}-${AWS::StackName}  # Make it unique
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: error.html
@@ -17,7 +17,7 @@ Resources:
         Statement:
           - Action: "s3:GetObject"
             Effect: "Allow"
-            Resource: !Sub "arn:aws:s3:::my-static-website-${AWS::AccountId}/*"
+            Resource: !Sub "arn:aws:s3:::${WebsiteBucket}/*"
             Principal: "*"
 
 Outputs:
