@@ -2,18 +2,16 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: CloudFormation Template for Static Website Hosting on S3
 
 Resources:
-  # Create the S3 bucket for static website hosting
   WebsiteBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: !Sub "my-static-website-${AWS::AccountId}-${AWS::Region}"
+      BucketName: !Sub "my-static-website-${AWS::AccountId}-${AWS::Region}-${AWS::StackName}"
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: error.html
       AccessControl: PublicRead
     DeletionPolicy: Retain
 
-  # Bucket Policy to allow public read access to the bucket's contents
   WebsiteBucketPolicy:
     Type: 'AWS::S3::BucketPolicy'
     Properties:
@@ -26,32 +24,7 @@ Resources:
             Action: "s3:GetObject"
             Resource: !Sub "arn:aws:s3:::${WebsiteBucket}/*"
 
-  # IAM Role for CloudFormation with the necessary permissions
-  CloudFormationExecutionRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: cloudformation.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: CloudFormationS3Permissions
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - s3:CreateBucket
-                  - s3:PutBucketPolicy
-                  - s3:GetBucketLocation
-                  - s3:ListBucket
-                  - s3:PutObject
-                Resource: "*"
-
 Outputs:
   WebsiteURL:
     Description: URL of the static website
-    Value: !GetAtt WebsiteBucket.WebsiteURL
+    Value: !Sub "http://${WebsiteBucket}.s3-website-${AWS::Region}.amazonaws.com/"
