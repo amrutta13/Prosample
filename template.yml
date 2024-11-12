@@ -3,7 +3,7 @@ Resources:
   WebsiteBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: my-static-website-${AWS::AccountId}-${AWS::Region}-${AWS::StackName}  # Make it unique
+      BucketName: my-static-website-${AWS::AccountId}-${AWS::Region}-${AWS::StackName}  # Make bucket name unique
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: error.html
@@ -14,11 +14,12 @@ Resources:
     Properties:
       Bucket: !Ref WebsiteBucket
       PolicyDocument:
+        Version: '2012-10-17'
         Statement:
-          - Action: "s3:GetObject"
-            Effect: "Allow"
-            Resource: !Sub "arn:aws:s3:::${WebsiteBucket}/*"
+          - Effect: Allow
             Principal: "*"
+            Action: "s3:GetObject"
+            Resource: !Sub "arn:aws:s3:::${WebsiteBucket}/*"
 
 Outputs:
   WebsiteURL:
