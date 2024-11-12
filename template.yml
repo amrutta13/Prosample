@@ -3,7 +3,7 @@ Resources:
   WebsiteBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: my-static-website-${AWS::AccountId}-${AWS::Region}-${AWS::StackName}  # Make bucket name unique
+      BucketName: my-static-website-${AWS::AccountId}-${AWS::Region}-${AWS::StackName}  # Unique bucket name
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: error.html
